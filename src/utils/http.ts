@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 
 import { config, HttpStatusCode } from "~/constants";
+import applyMockAdapter from "~/mock";
 import { getNextAuthToken } from "~/utils";
 
 const publicApi = axios.create({
@@ -66,6 +67,11 @@ privateApi.interceptors.response.use(
         return Promise.reject(error.response?.data);
     }
 );
+
+if (process.env.NEXT_PUBLIC_USE_MOCK_API === "true") {
+    applyMockAdapter(publicApi);
+    applyMockAdapter(privateApi);
+}
 
 /**
  *

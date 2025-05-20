@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { Course } from "~/types";
@@ -19,15 +20,18 @@ export const CourseItem = ({ course }: { course: Course }) => {
                 className="h-40 w-full object-cover"
             />
             <div className="p-4">
-                <h3 className="text-lg font-semibold">{course.name}</h3>
+                {/* <h3 className="text-lg font-semibold">{course.name}</h3> */}
+                <Link href={`/${course.id}`} className="text-lg font-semibold">
+                    {course.name}
+                </Link>
                 <Rating size={15} value={Number(course?.rating)} />
                 <div className="flex flex-row items-center gap-2">
                     {course.price_before_discount ? (
                         <>
-                            <p className="text-xl font-semibold text-red-600">
+                            <p className="text-xl font-semibold text-red-600">{formatPrice(course.price, "vi")}</p>
+                            <p className="font-semibold line-through">
                                 {formatPrice(course.price_before_discount, "vi")}
                             </p>
-                            <p className="font-semibold line-through">{formatPrice(course.price, "vi")}</p>
                         </>
                     ) : (
                         <p className="text-xl font-semibold">{formatPrice(course.price, "vi")}</p>

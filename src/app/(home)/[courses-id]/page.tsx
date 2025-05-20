@@ -12,13 +12,14 @@ type Props = {
 
 const Page = ({ params }: Props) => {
     const courseId = params["courses-id"];
-    const { data: courseData, loading } = useGetCourseById(courseId);
+
+    const { data: courseData, loading } = useGetCourseById(courseId ?? undefined);
 
     if (loading) {
         return <CourseSkeleton />;
     }
 
-    if (!courseData) {
+    if (!courseData || !courseId) {
         return <EmptyState />;
     }
 

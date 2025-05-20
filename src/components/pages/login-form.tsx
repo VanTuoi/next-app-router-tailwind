@@ -41,7 +41,6 @@ export const LoginForm = memo(() => {
         login(data);
     };
 
-    console.log("error", error);
     useEffect(() => {
         if (error?.errors) {
             Object.entries(error.errors).forEach(([field, messages]) => {

@@ -13,7 +13,7 @@ export const useGetCategories = () => {
     } = useQuery<Category[], ResponseData<null> | undefined>({
         queryKey: ["categories"],
         queryFn: async () => {
-            const { data } = await categoriesApi("private").getCategories();
+            const { data } = await categoriesApi("public").getCategories();
             return data.data || [];
         },
         staleTime: config.STALE_TIME,

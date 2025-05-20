@@ -1,18 +1,18 @@
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { path } from "~/constants";
 
 import { Button } from "~/components/ui";
 
 export const EmptyState = () => {
-    const router = useRouter();
-
     return (
         <div className="flex min-h-screen flex-col items-center justify-center text-center">
             <p className="text-lg text-gray-600">Không tìm thấy khoá học.</p>
-            <Button variant="default" className="mt-4" onClick={() => router.push(path.HOME)}>
-                Xem tất cả khóa học
-            </Button>
+            <Link href={path.HOME}>
+                <Button variant="default" className="mt-4">
+                    Xem tất cả khóa học
+                </Button>
+            </Link>
         </div>
     );
 };

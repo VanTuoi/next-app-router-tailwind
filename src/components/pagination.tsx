@@ -69,9 +69,9 @@ export const Pagination = ({ path = "/", queryConfig, pageSize = 1 }: Props) => 
                     <Button
                         variant={"ghost"}
                         className={cn(
-                            "mx-1 px-3 py-1 border-primary ",
+                            "mx-1 px-3 py-1 border-primary",
                             pageNumber === page
-                                ? "border-primary bg-primary hover:bg-primary/80"
+                                ? "border-primary bg-primary hover:bg-primary/80 text-white"
                                 : "border-transparent hover:bg-primary/10 "
                         )}
                         onClick={() => router.push(href)}

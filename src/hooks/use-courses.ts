@@ -16,7 +16,7 @@ export const useGetCourseById = (id?: string) => {
         queryKey: ["course", id],
         queryFn: async (): Promise<Course | null> => {
             if (!id) return null;
-            const res = await coursesApi("private").getCourse(id);
+            const res = await coursesApi("public").getCourse(id);
             return res.data.data;
         },
         enabled: !!id,
@@ -47,7 +47,8 @@ export const useGetCourses = (params: QueryConfig) => {
     >({
         queryKey: ["courses", params],
         queryFn: async () => {
-            const { data } = await coursesApi("private").getCourses(params);
+            const { data } = await coursesApi("public").getCourses(params);
+            console.log("data", data);
             return {
                 courses: data.data || [],
                 meta: data.meta || { total_pages: 1, total_items: 0, page: 1, limit: "10" }
