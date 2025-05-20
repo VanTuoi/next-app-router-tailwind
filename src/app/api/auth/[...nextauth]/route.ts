@@ -19,10 +19,19 @@ const handler = NextAuth({
             name: "Credentials",
             credentials: {
                 email: { label: "Email", type: "text" },
-                password: { label: "Password", type: "password" }
+                password: { label: "Password", type: "password" },
+                accessToken: { label: "Access Token", type: "text" },
+                user: { label: "User", type: "text" }
             },
             authorize: async (credentials): Promise<ExtendedUser | null> => {
                 try {
+                    if (credentials?.accessToken && credentials?.user) {
+                        return {
+                            accessToken: credentials.accessToken,
+                            ...JSON.parse(credentials.user)
+                        };
+                    }
+
                     const { data } = await authApi("public").login({
                         email: credentials?.email,
                         password: credentials?.password

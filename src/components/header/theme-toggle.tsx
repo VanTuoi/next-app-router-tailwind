@@ -1,12 +1,19 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 
 import { useTheme } from "~/hooks";
 
 export const ThemeToggle = memo(() => {
     const { type, toggleTheme } = useTheme();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) return null;
 
     return (
         <button
@@ -20,9 +27,9 @@ export const ThemeToggle = memo(() => {
                 }`}
             >
                 {type === "light" ? (
-                    <Moon className="h-5 w-5 text-orange-300 animate-in fade-in" />
+                    <Moon className="h-5 w-5 text-orange-300 animate-in fade-in dark:text-orange-300" />
                 ) : (
-                    <Sun className="h-5 w-5 text-black animate-in fade-in" />
+                    <Sun className="h-5 w-5 text-black animate-in fade-in dark:text-black" />
                 )}
             </span>
         </button>

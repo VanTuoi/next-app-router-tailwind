@@ -1,8 +1,7 @@
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 
-import config from "~/constants/config";
-import HttpStatusCode from "~/constants/http-status-code.enum";
+import { config, HttpStatusCode } from "~/constants";
 import { getNextAuthToken } from "~/utils";
 
 const publicApi = axios.create({

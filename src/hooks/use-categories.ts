@@ -1,8 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import config from "~/constants/config";
+import { config } from "~/constants";
 import { categoriesApi } from "~/services";
-import { ResponseData } from "~/types";
+import { Category, ResponseData, TypeCategorySchema } from "~/types";
 
 export const useGetCategories = () => {
     const {
@@ -10,26 +10,92 @@ export const useGetCategories = () => {
         isLoading: loading,
         error,
         refetch
-    } = useQuery({
-        queryKey: ["courses"],
+    } = useQuery<Category[], ResponseData<null> | undefined>({
+        queryKey: ["categories"],
         queryFn: async () => {
-            try {
-                const res = await categoriesApi("private").getCourses();
-                return {
-                    courses: res.data.data || []
-                };
-            } catch (err) {
-                throw err;
-            }
+            const { data } = await categoriesApi("private").getCategories();
+            return data.data || [];
         },
         staleTime: config.STALE_TIME,
         placeholderData: (prevData) => prevData
     });
 
     return {
-        data: data?.courses || [],
+        data: data || [],
         loading,
-        error: error as unknown as ResponseData<null> | null,
+        error,
         refetch
+    };
+};
+
+export const useCreateCategory = (onSuccessCallback?: () => void) => {
+    const queryClient = useQueryClient();
+
+    const {
+        mutate: createCategory,
+        isPending: loading,
+        error
+    } = useMutation<void, ResponseData<null> | undefined, TypeCategorySchema>({
+        mutationFn: async (categoryData: TypeCategorySchema): Promise<void> => {
+            await categoriesApi("private").createCategory(categoryData);
+        },
+        onSuccess: () => {
+            onSuccessCallback?.();
+            queryClient.invalidateQueries({ queryKey: ["categories"] });
+        }
+    });
+
+    return {
+        createCategory,
+        loading,
+        error
+    };
+};
+
+export const useUpdateCategory = (onSuccessCallback?: () => void) => {
+    const queryClient = useQueryClient();
+
+    const {
+        mutate: updateCategory,
+        isPending: loading,
+        error
+    } = useMutation<void, ResponseData<null> | undefined, TypeCategorySchema>({
+        mutationFn: async (categoryData: TypeCategorySchema): Promise<void> => {
+            await categoriesApi("private").updateCategory(categoryData.id, categoryData);
+        },
+        onSuccess: () => {
+            onSuccessCallback?.();
+            queryClient.invalidateQueries({ queryKey: ["categories"] });
+        }
+    });
+
+    return {
+        updateCategory,
+        loading,
+        error
+    };
+};
+
+export const useDeleteCategory = (onSuccessCallback?: () => void) => {
+    const queryClient = useQueryClient();
+
+    const {
+        mutate: deleteCategory,
+        isPending: loading,
+        error
+    } = useMutation<void, ResponseData<null> | undefined, string>({
+        mutationFn: async (id: string): Promise<void> => {
+            await categoriesApi("private").deleteCategory(id);
+        },
+        onSuccess: () => {
+            onSuccessCallback?.();
+            queryClient.invalidateQueries({ queryKey: ["categories"] });
+        }
+    });
+
+    return {
+        deleteCategory,
+        loading,
+        error
     };
 };

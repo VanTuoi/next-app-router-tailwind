@@ -1,6 +1,5 @@
-import { ResponseData } from "~/types";
-import { UserData } from "~/types/type";
-import { apiSelector } from "~/utils/http";
+import { ResponseData, UserData } from "~/types";
+import { apiSelector } from "~/utils";
 
 const URL = "/users";
 

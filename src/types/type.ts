@@ -34,31 +34,34 @@ export interface Category {
 }
 
 export interface Course {
-    id: string;
+    id?: string;
     image?: string;
     images?: string[];
     course_code: string;
     name: string;
     description?: string;
-    year: number;
+    year?: number;
     credit: number;
     price: string;
-    price_before_discount: string;
-    rating: number;
-    quantity: number;
-    sold: number;
-    view: number;
-    category: Category;
+    price_before_discount?: string;
+    rating?: string;
+    quantity?: number;
+    sold?: number;
+    view?: number;
+    category?: Category;
+    category_id?: string;
     created_at: string;
     updated_at?: string;
 }
 
-export type CourseInput = Omit<Course, "id" | "created_at" | "updated_at">;
+export interface CourseInput extends Omit<Course, "created_at" | "updated_at" | "category"> {
+    category?: string[];
+}
 
 export interface CourseQueryParams {
     page?: number | string;
     limit?: number | string;
-    sort_by?: "created_at" | "view" | "sold" | "price";
+    sort_by?: "created_at" | "updated_at" | "view" | "sold" | "price" | "name" | "course_code";
     order?: "asc" | "desc";
     exclude?: string;
     rating_filter?: number | string;

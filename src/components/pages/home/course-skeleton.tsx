@@ -1,7 +1,11 @@
-export const SkeletonLoader = () => {
+type Props = {
+    count?: number;
+};
+
+export const CourseSkeleton = ({ count = 6 }: Props) => {
     return (
         <>
-            {Array.from({ length: 3 }).map((_, index) => (
+            {Array.from({ length: count }).map((_, index) => (
                 <div
                     key={index}
                     className="animate-pulse rounded-xl border border-gray-100 bg-white dark:border-gray-600 dark:bg-gray-800"

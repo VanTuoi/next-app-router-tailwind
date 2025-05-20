@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 
-import { path } from "~/constants/path";
 import { QueryConfig } from "~/hooks";
 import { createSearchString } from "~/utils";
 
@@ -11,13 +10,14 @@ import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue }
 import { cn } from "~/lib/utils";
 
 interface Props {
+    path: string;
     queryConfig: QueryConfig;
     pageSize: number;
 }
 
 const RANGE = 2;
 
-export const Pagination = ({ queryConfig, pageSize = 1 }: Props) => {
+export const Pagination = ({ path = "/", queryConfig, pageSize = 1 }: Props) => {
     const router = useRouter();
     const page = Number(queryConfig.page);
 
@@ -29,7 +29,7 @@ export const Pagination = ({ queryConfig, pageSize = 1 }: Props) => {
             if (!dotBefore) {
                 dotBefore = true;
                 return (
-                    <span key={`before-${index}`} className="mx-2 rounded bg-white px-3 py-2">
+                    <span key={`before-${index}`} className="mx-2 rounded px-3 py-2">
                         ...
                     </span>
                 );
@@ -41,7 +41,7 @@ export const Pagination = ({ queryConfig, pageSize = 1 }: Props) => {
             if (!dotAfter) {
                 dotAfter = true;
                 return (
-                    <span key={`after-${index}`} className="mx-2 rounded bg-white px-3 py-2">
+                    <span key={`after-${index}`} className="mx-2 rounded px-3 py-2">
                         ...
                     </span>
                 );
@@ -63,15 +63,16 @@ export const Pagination = ({ queryConfig, pageSize = 1 }: Props) => {
                     return renderDotBefore(index);
                 }
 
-                const href = path.HOME + createSearchString({ ...queryConfig, page: pageNumber.toString() });
+                const href = path + createSearchString({ ...queryConfig, page: pageNumber.toString() });
 
                 return (
                     <Button
+                        variant={"ghost"}
                         className={cn(
-                            "mx-1 px-3 py-1 border-primary hover:bg-primary/10",
+                            "mx-1 px-3 py-1 border-primary ",
                             pageNumber === page
-                                ? "border-primary bg-primary text-white"
-                                : "border-transparent text-gray-600 bg-white"
+                                ? "border-primary bg-primary hover:bg-primary/80"
+                                : "border-transparent hover:bg-primary/10 "
                         )}
                         onClick={() => router.push(href)}
                         key={index}
@@ -84,22 +85,22 @@ export const Pagination = ({ queryConfig, pageSize = 1 }: Props) => {
 
     const handlePageChange = (newPage: number) => {
         const newQuery = { ...queryConfig, page: newPage.toString() };
-        router.push(path.HOME + createSearchString(newQuery));
+        router.push(path + createSearchString(newQuery));
     };
 
     const handleLimitChange = (newLimit: string) => {
         const newQuery = { ...queryConfig, page: "1", limit: newLimit };
-        router.push(path.HOME + createSearchString(newQuery));
+        router.push(path + createSearchString(newQuery));
     };
 
     return (
         <div className="mb-4 mt-6 flex flex-wrap items-center justify-center gap-3">
             <div className="flex items-center">
                 <Select value={queryConfig.limit || "10"} onValueChange={handleLimitChange}>
-                    <SelectTrigger className="w-[55px] bg-white">
+                    <SelectTrigger className="w-[55px] bg-paper">
                         <SelectValue placeholder="Số lượng" />
                     </SelectTrigger>
-                    <SelectContent className="w-[55px] bg-white">
+                    <SelectContent className="w-[55px] bg-paper text-foreground">
                         <SelectItem value="2">2</SelectItem>
                         <SelectItem value="5">5</SelectItem>
                         <SelectItem value="10">10</SelectItem>
@@ -110,14 +111,14 @@ export const Pagination = ({ queryConfig, pageSize = 1 }: Props) => {
             <div className="h-8 w-px bg-gray-300"></div>
             <div className="flex items-center">
                 {page === 1 ? (
-                    <Button disabled className="text-muted-foreground bg-white">
+                    <Button disabled variant="ghost" className="text-foreground-muted">
                         Trang trước
                     </Button>
                 ) : (
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         onClick={() => handlePageChange(page - 1)}
-                        className="border-none bg-white text-primary hover:bg-primary/10"
+                        className="text-primary hover:bg-primary/10"
                     >
                         Trang trước
                     </Button>
@@ -126,14 +127,14 @@ export const Pagination = ({ queryConfig, pageSize = 1 }: Props) => {
                 {renderPagination()}
 
                 {page === pageSize ? (
-                    <Button disabled className="text-muted-foreground bg-white">
+                    <Button disabled variant="ghost" className="text-foreground-muted">
                         Trang kế
                     </Button>
                 ) : (
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         onClick={() => handlePageChange(page + 1)}
-                        className="border-none bg-white text-primary hover:bg-primary/10"
+                        className="text-primary hover:bg-primary/10"
                     >
                         Trang kế
                     </Button>

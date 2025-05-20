@@ -2,56 +2,39 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { signIn, signOut } from "next-auth/react";
-import { useState } from "react";
 
-import { path } from "~/constants/path";
+import { path } from "~/constants";
 import { authApi } from "~/services";
-import { ResponseData, UserData } from "~/types";
+import { LoginData, ResponseData, TypeUserSchema, UserData } from "~/types";
 
-interface LoginCredentials {
-    email: string;
-    password: string;
-}
+type LoginFormData = Pick<TypeUserSchema, "email" | "password">;
 
 export const useLogin = (onSuccessCallback?: () => void) => {
-    const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    const login = async (credentials: LoginCredentials) => {
-        setLoading(true);
-        setErrorMessage(null);
-
-        const res = await signIn("credentials", {
-            ...credentials,
-            redirect: false
-        });
-
-        setLoading(false);
-
-        if (res?.ok) {
-            onSuccessCallback?.();
-        } else {
-            setErrorMessage("Sai tài khoản hoặc mật khẩu");
-        }
-    };
-
-    return {
-        login,
-        loading,
-        errorMessage
-    };
-};
-
-export const useRegister = (onSuccessCallback?: () => void) => {
     const {
-        mutate: register,
-        isPending,
-        data: mutationData,
+        mutate: login,
+        isPending: loading,
         error
-    } = useMutation({
-        mutationFn: async (userData: Pick<UserData, "name" | "email" | "password">): Promise<UserData | null> => {
-            const res = await authApi("public").register(userData);
-            return res.data.data;
+    } = useMutation<LoginData, ResponseData<null> | undefined, LoginFormData>({
+        mutationFn: async (credentials: LoginFormData): Promise<LoginData> => {
+            const { data } = await authApi("public").login(credentials);
+
+            if (!data?.data?.accessToken || !data?.data?.user) {
+                throw new Error("Invalid login response");
+            }
+
+            const signInResponse = await signIn("credentials", {
+                email: credentials.email,
+                password: credentials.password,
+                accessToken: data.data.accessToken,
+                user: JSON.stringify(data.data.user),
+                redirect: false
+            });
+
+            if (!signInResponse?.ok) {
+                throw new Error(signInResponse?.error || "Failed to sign in");
+            }
+
+            return data.data;
         },
         onSuccess: () => {
             onSuccessCallback?.();
@@ -59,16 +42,53 @@ export const useRegister = (onSuccessCallback?: () => void) => {
     });
 
     return {
-        data: mutationData,
-        register,
-        loading: isPending,
-        error: error as unknown as ResponseData<null> | null
+        login,
+        loading,
+        error
     };
 };
 
-export const useLogout = () => {
-    const handleLogout = () => {
-        signOut({ callbackUrl: path.HOME });
+export const useRegister = (onSuccessCallback?: () => void) => {
+    const {
+        mutate: register,
+        isPending: loading,
+        error
+    } = useMutation<UserData | null, ResponseData<null> | undefined, Pick<UserData, "name" | "email" | "password">>({
+        mutationFn: async (userData: Pick<UserData, "name" | "email" | "password">): Promise<UserData | null> => {
+            const { data } = await authApi("public").register(userData);
+            return data.data;
+        },
+        onSuccess: (data) => {
+            if (data) {
+                onSuccessCallback?.();
+            }
+        }
+    });
+
+    return {
+        register,
+        loading,
+        error
     };
-    return { handleLogout };
+};
+
+export const useLogout = (onSuccessCallback?: () => void) => {
+    const {
+        mutate: logout,
+        isPending: loading,
+        error
+    } = useMutation({
+        mutationFn: async (): Promise<void> => {
+            await signOut({ callbackUrl: path.HOME });
+        },
+        onSuccess: () => {
+            onSuccessCallback?.();
+        }
+    });
+
+    return {
+        logout,
+        loading,
+        error: error as Error | null
+    };
 };

@@ -1,0 +1,61 @@
+"use client";
+
+import { usePathname, useRouter } from "next/navigation";
+
+import { BookA, ChartBarStacked } from "lucide-react";
+
+import { Logo } from "~/components/logo";
+
+interface MenuItemType {
+    url: string;
+    label: string;
+    icon: React.ReactNode;
+}
+
+const menuItems: MenuItemType[] = [
+    {
+        url: "categories",
+        label: "Danh mục",
+        icon: <ChartBarStacked size={18} />
+    },
+    {
+        url: "courses",
+        label: "Khoá học",
+        icon: <BookA size={18} />
+    }
+];
+
+export const Sidebar = () => {
+    const router = useRouter();
+    const pathname = usePathname();
+
+    return (
+        <aside className="flex min-h-screen w-full flex-col border-r border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
+            <div className="pb-6">
+                <Logo />
+            </div>
+            <nav className="flex flex-col gap-2">
+                {menuItems.map((item) => {
+                    const itemPath = `/admin/${item.url}`;
+                    const isActive = pathname === itemPath;
+                    return (
+                        <div
+                            key={item.url}
+                            role="button"
+                            aria-current={isActive ? "page" : undefined}
+                            onClick={() => router.push(itemPath)}
+                            className={`flex cursor-pointer items-center gap-3 rounded px-4 py-4 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
+                                isActive
+                                    ? "bg-gray-200 text-primary dark:bg-gray-800"
+                                    : "text-gray-600 dark:text-gray-300"
+                            }`}
+                        >
+                            {item.icon}
+                            <span>{item.label}</span>
+                        </div>
+                    );
+                })}
+            </nav>
+        </aside>
+    );
+};

@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { path } from "~/constants/path";
+import { path } from "~/constants";
 import { QueryConfig, useGetCategories } from "~/hooks";
 import { courseSchema, TypeCourseSchema } from "~/types";
 import { createSearchString } from "~/utils";
@@ -47,7 +47,7 @@ const FormData = courseSchema
         }
     );
 
-type TypeFilterCourseSchema = Omit<TypeCourseSchema, "name">;
+type FilterCourses = Pick<TypeCourseSchema, "price_max" | "price_min" | "rating">;
 
 const initValueFilter = {
     price_min: "0",
@@ -74,7 +74,7 @@ export const Filter = ({ queryConfig }: Props) => {
         watch,
         setValue,
         formState: { errors, isValid }
-    } = useForm({
+    } = useForm<FilterCourses>({
         resolver: zodResolver(FormData),
         defaultValues: initValueFilter,
         mode: "onChange"
@@ -82,7 +82,7 @@ export const Filter = ({ queryConfig }: Props) => {
 
     const selectedRating = Number(watch("rating"));
 
-    const onSubmit = handleSubmit((data) => {
+    const onSubmit = handleSubmit((data: FilterCourses) => {
         handleFilterByRangePrice(data);
     });
 
@@ -98,7 +98,7 @@ export const Filter = ({ queryConfig }: Props) => {
         router.push(path.HOME + createSearchString(newQuery));
     };
 
-    const handleFilterByRangePrice = (data: TypeFilterCourseSchema) => {
+    const handleFilterByRangePrice = (data: FilterCourses) => {
         const newQuery = {
             ...queryConfig,
             price_min: data.price_min,
@@ -133,7 +133,7 @@ export const Filter = ({ queryConfig }: Props) => {
         <div className="flex flex-col flex-wrap items-start gap-3">
             <div className="flex flex-col items-start gap-1">
                 <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-[200px] space-y-2">
-                    <div className="flex items-center justify-between space-x-4">
+                    <div className="flex items-center justify-between space-x-4 rounded-md p-1">
                         <h4 className="text-sm font-semibold uppercase">Danh mục</h4>
                         <CollapsibleTrigger asChild>
                             <Button variant="ghost" size="sm">

@@ -1,5 +1,5 @@
-const page = () => {
-    return <div className="text-primary">Admin page</div>;
-};
+import { redirect } from "next/navigation";
 
-export default page;
+export default function AdminRedirect() {
+    redirect("/admin/categories");
+}

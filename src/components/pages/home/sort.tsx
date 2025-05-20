@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 
-import { path } from "~/constants/path";
+import { path } from "~/constants";
 import { QueryConfig } from "~/hooks";
 import { createSearchString } from "~/utils";
 
@@ -12,6 +12,16 @@ interface Props {
 
 export const Sort = ({ queryConfig }: Props) => {
     const router = useRouter();
+
+    const sortOptions = [
+        { label: "Tên", value: "name" },
+        { label: "Năm học", value: "year" },
+        { label: "Đánh giá", value: "rating" },
+        { label: "Mới nhất", value: "created_at" },
+        { label: "Lượt xem", value: "view" },
+        { label: "Bán chạy", value: "sold" },
+        { label: "Giá", value: "price" }
+    ];
 
     const handleSortByChange = (sort_by: string) => {
         const newQuery = {
@@ -41,14 +51,12 @@ export const Sort = ({ queryConfig }: Props) => {
                     <SelectTrigger className="w-[120px] bg-paper">
                         <SelectValue placeholder="Trường sắp xếp" />
                     </SelectTrigger>
-                    <SelectContent className="w-[120px] bg-paper">
-                        <SelectItem value="name">Tên</SelectItem>
-                        <SelectItem value="year">Năm học</SelectItem>
-                        <SelectItem value="rating">Đánh giá</SelectItem>
-                        <SelectItem value="created_at">Mới nhất</SelectItem>
-                        <SelectItem value="view">Lượt xem</SelectItem>
-                        <SelectItem value="sold">Bán chạy</SelectItem>
-                        <SelectItem value="price">Giá</SelectItem>
+                    <SelectContent className="w-[120px] bg-paper text-foreground">
+                        {sortOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                            </SelectItem>
+                        ))}
                     </SelectContent>
                 </Select>
             </div>
@@ -59,7 +67,7 @@ export const Sort = ({ queryConfig }: Props) => {
                     <SelectTrigger className="w-[120px] bg-paper">
                         <SelectValue placeholder="Thứ tự" />
                     </SelectTrigger>
-                    <SelectContent className="w-[120px] bg-paper">
+                    <SelectContent className="w-[120px] bg-paper text-foreground">
                         <SelectItem value="asc">Tăng dần</SelectItem>
                         <SelectItem value="desc">Giảm dần</SelectItem>
                     </SelectContent>

@@ -154,7 +154,7 @@ export const RegisterForm = memo(() => {
                         <span className="mr-1">Bạn đã có tài khoản?</span>
                         <span
                             className="cursor-pointer font-semibold text-blue-600 hover:text-blue-800"
-                            onClick={() => router.push(path.HOME)}
+                            onClick={() => router.push(path.LOGIN)}
                         >
                             Đăng nhập ngay
                         </span>

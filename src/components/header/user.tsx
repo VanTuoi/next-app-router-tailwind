@@ -21,7 +21,7 @@ import {
 
 export const User = memo(() => {
     const { data: session, status } = useSession();
-    const { handleLogout } = useLogout();
+    const { logout } = useLogout();
     const router = useRouter();
 
     const userData = session?.user;
@@ -58,7 +58,7 @@ export const User = memo(() => {
                         <span>Cài đặt</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                        onClick={handleLogout}
+                        onClick={() => logout()}
                         className="flex cursor-pointer items-center space-x-2 border-none px-4 py-2 text-gray-800 outline-none hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600"
                     >
                         <LogOutIcon className="h-5 w-5" />

@@ -6,13 +6,13 @@ export interface PaginationMeta {
     total_pages: number;
     total_items: number;
     page: number;
-    limit: number;
+    limit: string;
 }
 
 export interface ResponseData<T> {
     success: boolean;
     message: string;
-    data: T | null;
+    data: T;
     meta?: PaginationMeta;
     errors?: Errors;
 }

@@ -13,8 +13,8 @@ import { TypeUserSchema, userSchema } from "~/types";
 import { Logo } from "../logo";
 import { Button, Card, CardContent, Input, InputPassword, Label } from "../ui";
 
-type LoginFormData = Pick<TypeUserSchema, "email" | "password">;
 const loginSchema = userSchema.pick({ email: true, password: true });
+type LoginFormData = Pick<TypeUserSchema, "email" | "password">;
 
 const initDefaultValuesLogin = {
     email: "jone@example.com",
@@ -23,7 +23,7 @@ const initDefaultValuesLogin = {
 
 export const LoginForm = memo(() => {
     const router = useRouter();
-    const { login, loading, errorMessage } = useLogin(() => router.push("/"));
+    const { login, loading, error } = useLogin(() => router.push("/"));
 
     const {
         register,
@@ -37,13 +37,25 @@ export const LoginForm = memo(() => {
         defaultValues: initDefaultValuesLogin
     });
 
+    const handleLogin = async (data: LoginFormData) => {
+        login(data);
+    };
+
+    console.log("error", error);
     useEffect(() => {
-        if (errorMessage) {
-            setError("email", { type: "manual", message: errorMessage });
+        if (error?.errors) {
+            Object.entries(error.errors).forEach(([field, messages]) => {
+                messages.forEach((message) => {
+                    setError(field as keyof LoginFormData, {
+                        type: "server",
+                        message
+                    });
+                });
+            });
         } else {
             clearErrors();
         }
-    }, [errorMessage, setError, clearErrors]);
+    }, [error, setError, clearErrors]);
 
     return (
         <div className="flex min-h-screen items-center justify-center px-4">
@@ -54,7 +66,7 @@ export const LoginForm = memo(() => {
                     </div>
                     <p className="text-xl font-semibold">Đăng nhập</p>
 
-                    <form className="space-y-4" onSubmit={handleSubmit(login)}>
+                    <form className="space-y-4" onSubmit={handleSubmit(handleLogin)}>
                         <div>
                             <Label htmlFor="email" className="py-2">
                                 Email
@@ -99,11 +111,9 @@ export const LoginForm = memo(() => {
                     </div>
 
                     <div className="my-4 flex items-center gap-4">
-                        <div className="flex-grow border-t border-black " />
-                        <span className="whitespace-nowrap text-center text-sm font-semibold text-black">
-                            Hoặc đăng nhập với
-                        </span>
-                        <div className="flex-grow border-t border-black" />
+                        <div className="flex-grow border-t border-gray-600 " />
+                        <span className="whitespace-nowrap text-center text-sm font-semibold ">Hoặc đăng nhập với</span>
+                        <div className="flex-grow border-t border-gray-600" />
                     </div>
 
                     <div className="flex justify-center gap-4 text-xl">
