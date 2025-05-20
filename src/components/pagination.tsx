@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import { QueryConfig } from "~/hooks";
 import { createSearchString } from "~/utils";
 
@@ -15,7 +17,7 @@ interface Props {
     pageSize: number;
 }
 
-const RANGE = 2;
+const RANGE = 1;
 
 export const Pagination = ({ path = "/", queryConfig, pageSize = 1 }: Props) => {
     const router = useRouter();
@@ -94,7 +96,7 @@ export const Pagination = ({ path = "/", queryConfig, pageSize = 1 }: Props) => 
     };
 
     return (
-        <div className="mb-4 mt-6 flex flex-wrap items-center justify-center gap-3">
+        <div className="mb-4 mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-center">
             <div className="flex items-center">
                 <Select value={queryConfig.limit || "10"} onValueChange={handleLimitChange}>
                     <SelectTrigger className="w-[55px] bg-paper">
@@ -108,11 +110,12 @@ export const Pagination = ({ path = "/", queryConfig, pageSize = 1 }: Props) => 
                     </SelectContent>
                 </Select>
             </div>
-            <div className="h-8 w-px bg-gray-300"></div>
-            <div className="flex items-center">
+            <div className="hidden h-8 w-px bg-gray-300 sm:inline"></div>
+            <div className="flex w-full items-center justify-center md:w-auto">
                 {page === 1 ? (
                     <Button disabled variant="ghost" className="text-foreground-muted">
-                        Trang trước
+                        <ChevronLeft className="sm:hidden" />
+                        <span className="hidden sm:inline">Trang trước</span>
                     </Button>
                 ) : (
                     <Button
@@ -120,7 +123,8 @@ export const Pagination = ({ path = "/", queryConfig, pageSize = 1 }: Props) => 
                         onClick={() => handlePageChange(page - 1)}
                         className="text-primary hover:bg-primary/10"
                     >
-                        Trang trước
+                        <ChevronLeft className="sm:hidden" />
+                        <span className="hidden sm:inline">Trang trước</span>
                     </Button>
                 )}
 
@@ -128,7 +132,8 @@ export const Pagination = ({ path = "/", queryConfig, pageSize = 1 }: Props) => 
 
                 {page === pageSize ? (
                     <Button disabled variant="ghost" className="text-foreground-muted">
-                        Trang kế
+                        <ChevronRight className="sm:hidden" />
+                        <span className="hidden sm:inline">Trang kế</span>
                     </Button>
                 ) : (
                     <Button
@@ -136,7 +141,8 @@ export const Pagination = ({ path = "/", queryConfig, pageSize = 1 }: Props) => 
                         onClick={() => handlePageChange(page + 1)}
                         className="text-primary hover:bg-primary/10"
                     >
-                        Trang kế
+                        <ChevronRight className="sm:hidden" />
+                        <span className="hidden sm:inline">Trang kế</span>
                     </Button>
                 )}
             </div>

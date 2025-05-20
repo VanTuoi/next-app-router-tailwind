@@ -44,7 +44,7 @@ export const Sort = ({ queryConfig }: Props) => {
     };
 
     return (
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-1 sm:gap-4">
             <div className="flex items-center gap-2">
                 <p>Sắp xếp theo:</p>
                 <Select value={queryConfig.sort_by || "created_at"} onValueChange={handleSortByChange}>

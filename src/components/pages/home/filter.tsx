@@ -65,6 +65,7 @@ export const Filter = ({ queryConfig }: Props) => {
     const { data: dataCategories = [] } = useGetCategories();
 
     const [isOpen, setIsOpen] = useState(true);
+    const [isFilterOpen, setIsFilterOpen] = useState(true);
 
     const currentCategory = queryConfig.category;
 
@@ -130,73 +131,90 @@ export const Filter = ({ queryConfig }: Props) => {
     };
 
     return (
-        <div className="flex flex-col flex-wrap items-start gap-3">
-            <div className="flex flex-col items-start gap-1">
-                <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-[200px] space-y-2">
-                    <div className="flex items-center justify-between space-x-4 rounded-md p-1">
-                        <h4 className="text-sm font-semibold uppercase">Danh mục</h4>
-                        <CollapsibleTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                                {isOpen ? <ChevronsDownUp /> : <ChevronsUpDown />}
-                            </Button>
-                        </CollapsibleTrigger>
-                    </div>
-                    {!isOpen && (
-                        <div className="cursor-pointer px-2 py-1 font-mono text-sm font-semibold text-primary">
-                            {currentCategory || "Tất cả"}
-                        </div>
-                    )}
+        <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+            <div className="block lg:hidden">
+                <CollapsibleTrigger asChild>
+                    <Button variant="outline" className="mb-2 w-full">
+                        {isFilterOpen ? "Ẩn bộ lọc" : "Hiện bộ lọc"}
+                    </Button>
+                </CollapsibleTrigger>
+            </div>
 
-                    <CollapsibleContent className="space-y-2">
-                        {renderCategoryItem(undefined, "Tất cả")}
-                        {dataCategories.map((item) => renderCategoryItem(item.name))}
-                    </CollapsibleContent>
-                </Collapsible>
-            </div>
-            <div className="w-full flex-grow border-t border-gray-200" />
-            <div className="flex flex-col items-start gap-2">
-                <p className="">Khoảng giá</p>
-                <form onSubmit={onSubmit} noValidate>
-                    <div className="flex flex-row items-center gap-2">
-                        <Input
-                            {...register("price_min")}
-                            type="number"
-                            className="h-[30px] w-[85px] border-gray-400"
-                            placeholder="Từ"
-                        />
-                        {"-"}
-                        <Input
-                            {...register("price_max")}
-                            type="number"
-                            className="h-[30px] w-[85px] border-gray-400"
-                            placeholder="Đến"
-                        />
+            <CollapsibleContent>
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-1">
+                    <div className="flex flex-col items-start gap-1">
+                        <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full space-y-2">
+                            <div className="flex items-center justify-between space-x-4 rounded-md p-1">
+                                <h4 className="text-sm font-semibold uppercase">Danh mục</h4>
+                                <CollapsibleTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                        {isOpen ? <ChevronsDownUp /> : <ChevronsUpDown />}
+                                    </Button>
+                                </CollapsibleTrigger>
+                            </div>
+
+                            {!isOpen && (
+                                <div className="cursor-pointer px-2 py-1 font-mono text-sm font-semibold text-primary">
+                                    {currentCategory || "Tất cả"}
+                                </div>
+                            )}
+
+                            <CollapsibleContent className="space-y-1 md:space-y-2">
+                                {renderCategoryItem(undefined, "Tất cả")}
+                                {dataCategories.map((item) => renderCategoryItem(item.name))}
+                            </CollapsibleContent>
+                        </Collapsible>
                     </div>
-                    {(errors.price_min || errors.root || errors.price_max) && (
-                        <p className="mt-2 text-sm text-red-500">
-                            {errors.price_min?.message || errors.root?.message || errors.price_max?.message}
-                        </p>
-                    )}
-                    <div className="mt-3">
-                        <p className="mb-1 text-sm">Đánh giá tối thiểu</p>
-                        <RatingFilter
-                            value={selectedRating}
-                            onChange={(value) => setValue("rating", value.toString())}
-                        />
+
+                    <div className="flex flex-col items-start gap-2">
+                        <p>Khoảng giá</p>
+                        <form onSubmit={onSubmit} noValidate>
+                            <div className="flex w-full flex-col items-center gap-2 sm:flex-row">
+                                <Input
+                                    {...register("price_min")}
+                                    type="number"
+                                    className="w-full border-gray-400 sm:h-[30px] md:w-[85px]"
+                                    placeholder="Từ"
+                                />
+                                <span className="hidden sm:inline">{"-"}</span>
+                                <span className="inline sm:hidden">{"đến"}</span>
+                                <Input
+                                    {...register("price_max")}
+                                    type="number"
+                                    className="w-full border-gray-400 sm:h-[30px] md:w-[85px]"
+                                    placeholder="Đến"
+                                />
+                            </div>
+
+                            {(errors.price_min || errors.root || errors.price_max) && (
+                                <p className="mt-2 text-sm text-red-500">
+                                    {errors.price_min?.message || errors.root?.message || errors.price_max?.message}
+                                </p>
+                            )}
+
+                            <div className="mt-3">
+                                <p className="mb-1 text-sm">Đánh giá tối thiểu</p>
+                                <RatingFilter
+                                    value={selectedRating}
+                                    onChange={(value) => setValue("rating", value.toString())}
+                                />
+                            </div>
+
+                            <Button disabled={!isValid} type="submit" className="mt-2 w-full">
+                                Áp dụng
+                            </Button>
+                            <Button
+                                type="button"
+                                onClick={() => handleRemoveAll()}
+                                className="mt-2 w-full text-red-500"
+                                variant="ghost"
+                            >
+                                Đặt lại
+                            </Button>
+                        </form>
                     </div>
-                    <Button disabled={!isValid} type="submit" className="mt-2 w-full">
-                        Áp dụng
-                    </Button>
-                    <Button
-                        type="button"
-                        onClick={() => handleRemoveAll()}
-                        className="mt-2 w-full text-red-500"
-                        variant="ghost"
-                    >
-                        Đặt lại
-                    </Button>
-                </form>
-            </div>
-        </div>
+                </div>
+            </CollapsibleContent>
+        </Collapsible>
     );
 };

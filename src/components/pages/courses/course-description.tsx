@@ -3,5 +3,5 @@ type Props = {
 };
 
 export const CourseDescription = ({ description }: Props) => {
-    return <p className="py-6 text-justify">{description}</p>;
+    return <p className="py-1 text-justify md:py-4">{description}</p>;
 };

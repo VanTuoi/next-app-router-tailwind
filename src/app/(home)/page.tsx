@@ -20,15 +20,15 @@ const CoursePage = () => {
     }
 
     return (
-        <div className="mt-2 grid grid-cols-5 gap-4">
-            <div className="col-span-1">
+        <div className="mt-1 grid grid-cols-1 gap-1 sm:gap-4 md:mt-2 md:grid-cols-5">
+            <div className="order-1 md:order-none md:col-span-1">
                 <Filter queryConfig={queryConfig} />
             </div>
-            <div className="col-span-4">
+            <div className="order-2 md:col-span-4">
                 <div className="flex justify-end">
                     <Sort queryConfig={queryConfig} />
                 </div>
-                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="mt-2 grid grid-cols-2 gap-2 sm:mt-6 sm:gap-4 lg:grid-cols-3">
                     {loading ? (
                         <CourseSkeleton count={6} />
                     ) : courses.length === 0 ? (

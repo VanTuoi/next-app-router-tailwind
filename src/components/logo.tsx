@@ -15,7 +15,7 @@ export const Logo = memo(() => {
             }}
         >
             <div className="rounded-lg bg-primary px-2 py-1 text-2xl font-bold text-white dark:text-black">F2</div>
-            <div className="px-2 py-1 text-lg font-semibold text-primary">Fast and Free</div>
+            <div className="hidden px-2 py-1 text-lg font-semibold text-primary md:inline">Fast and Free</div>
         </div>
     );
 });

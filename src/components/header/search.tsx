@@ -43,15 +43,19 @@ export const SearchComponent = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex w-full max-w-md items-center gap-2">
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="mx-2 flex max-w-md  items-center gap-2 sm:w-[300px] md:w-full"
+        >
             <Input
                 type="text"
                 {...register("name")}
                 placeholder="Nhập tên hoặc mã khoá học..."
                 className="rounded-lg border-2 border-gray-300 text-base font-medium placeholder:opacity-40  dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:placeholder:opacity-100"
             />
-            <Button type="submit" className="flex items-center gap-1 rounded-lg">
-                Tìm kiếm <Search size={18} />
+            <Button type="submit" className="flex items-center gap-1 rounded-lg px-2 md:px-4">
+                <span className="hidden md:inline">Tìm kiếm</span>
+                <Search size={18} />
             </Button>
         </form>
     );

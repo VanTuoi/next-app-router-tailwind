@@ -14,7 +14,11 @@ export const CourseCarousel = ({ images }: Props) => {
             <CarouselContent>
                 {images.map((item, index) => (
                     <CarouselItem key={index}>
-                        <img src={item} alt={`Course image ${index}`} className="h-80 w-full rounded-md object-cover" />
+                        <img
+                            src={item}
+                            alt={`Course image ${index}`}
+                            className="h-40 w-full rounded-md object-cover sm:h-80"
+                        />
                     </CarouselItem>
                 ))}
             </CarouselContent>

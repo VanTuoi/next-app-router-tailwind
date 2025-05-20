@@ -48,7 +48,6 @@ export const useGetCourses = (params: QueryConfig) => {
         queryKey: ["courses", params],
         queryFn: async () => {
             const { data } = await coursesApi("public").getCourses(params);
-            console.log("data", data);
             return {
                 courses: data.data || [],
                 meta: data.meta || { total_pages: 1, total_items: 0, page: 1, limit: "10" }

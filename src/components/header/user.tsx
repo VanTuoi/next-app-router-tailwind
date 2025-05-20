@@ -2,10 +2,11 @@
 
 import { useRouter } from "next/navigation";
 
-import { LogOut as LogOutIcon, User as UserIcon } from "lucide-react";
+import { LogIn, LogOut as LogOutIcon, User as UserIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { memo } from "react";
 
+import { path } from "~/constants";
 import { useLogout } from "~/hooks";
 
 import {
@@ -32,7 +33,15 @@ export const User = memo(() => {
     }
 
     if (!userData) {
-        return <Button onClick={() => router.push("/login")}>Đăng nhập</Button>;
+        return (
+            <Button
+                onClick={() => router.push(path.LOGIN)}
+                className="flex items-center gap-1 rounded-lg bg-transparent px-2 text-primary hover:bg-transparent md:bg-primary md:px-4 md:text-white md:hover:bg-primary/90"
+            >
+                <LogIn size={18} />
+                <span className="hidden md:inline">Đăng nhập</span>
+            </Button>
+        );
     }
 
     return (
