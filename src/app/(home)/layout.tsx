@@ -13,8 +13,8 @@ const Layout = ({ children }: RootLayoutProps) => {
     return (
         <div className="flex min-h-screen flex-col bg-gray-50 text-foreground dark:bg-gray-900 dark:text-foreground">
             <Header />
-            <main className="flex-1">
-                <div className="container px-1 py-1 md:py-4">{children}</div>
+            <main className="container flex-1">
+                <div className="px-1 py-1 md:py-4 lg:max-w-[1080px]">{children}</div>
             </main>
             <Footer />
         </div>
